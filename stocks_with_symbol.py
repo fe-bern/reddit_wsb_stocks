@@ -29,5 +29,5 @@ for i in stocks_dict:
 
 stocks_dict = dict(stocks_dict)
 
-with open("stocks_symbol.json", "w") as jsonf:
+with open("data/stocks_symbol.json", "a") as jsonf:
     json.dump(stocks_dict, jsonf)
