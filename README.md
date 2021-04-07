@@ -1,7 +1,7 @@
 # Reddit Wallstreetbets Stocks
 
 ### Requirements
-* ```pip install requirements.txt```
+* ```pip install -r requirements.txt```
 * Reddit Account
 * Reddit App with Client ID and Secret
 
