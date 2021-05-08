@@ -3,8 +3,10 @@ Help script for collecting stocks with their corresponding ticker symbol
 """
 
 import json
+
 import requests
 from bs4 import BeautifulSoup
+
 
 stocks = requests.get("https://stockanalysis.com/stocks/")
 stocks = BeautifulSoup(stocks.text, features="lxml")
@@ -14,9 +16,11 @@ for li in stocks.findAll("li"):
     for a in li.find("a"):
         stocks_clean.append(a)
 
+
 # manually checked
 del stocks_clean[0:12]
 del stocks_clean[-17:]
+
 
 stocks_dict = []
 for stock in stocks_clean:
@@ -28,6 +32,7 @@ for i in stocks_dict:
         i.pop()
 
 stocks_dict = dict(stocks_dict)
+
 
 with open("data/stocks_symbol.json", "a") as jsonfile:
     json.dump(stocks_dict, jsonfile)
