@@ -49,25 +49,10 @@ def get_data(auth, data, headers):
     headers["Authorization"] = f"bearer {TOKEN}"
 
     response = requests.get(
-        "https://oauth.reddit.com/r/wallstreetbets/hot",
-        headers=headers
+        "https://oauth.reddit.com/r/wallstreetbets/hot", headers=headers
     )
 
     return response
-
-
-wsb_hot = get_data(auth, data, headers)
-
-df = pd.DataFrame()
-for post in wsb_hot.json()["data"]["children"]:
-    df = df.append(
-        {
-            "subreddit": post["data"]["subreddit"],
-            "title": post["data"]["title"],
-            "selftext": post["data"]["selftext"],
-        },
-        ignore_index=True,
-    )
 
 
 def extract_sym(series):  # Should work also with 2 Character stock symbols
@@ -83,12 +68,6 @@ def extract_sym(series):  # Should work also with 2 Character stock symbols
         symbols.append(re.findall("[A-Z]{3,}", i))
 
     return symbols
-
-
-df["sym_title"] = extract_sym(df.title)
-df["sym_text"] = extract_sym(df.selftext)
-
-df["stocks"] = df["sym_title"] + df["sym_text"]
 
 
 def get_stocks_with_count(series):
@@ -110,8 +89,6 @@ def get_stocks_with_count(series):
         j += 1
     return d
 
-
-stocks_counter = get_stocks_with_count(df.stocks)
 
 # this json is from stocks_with_symbol.py
 with open("data/stocks_symbol.json") as json_file:
@@ -137,7 +114,30 @@ def data_wrangling(dict_stock):
 
 
 if __name__ == "__main__":
+
     while True:
         print(datetime.now())
+
+        wsb_hot = get_data(auth, data, headers)
+
+        df = pd.DataFrame()
+        for post in wsb_hot.json()["data"]["children"]:
+            df = df.append(
+                {
+                    "subreddit": post["data"]["subreddit"],
+                    "title": post["data"]["title"],
+                    "selftext": post["data"]["selftext"],
+                },
+                ignore_index=True,
+            )
+
+        df["sym_title"] = extract_sym(df.title)
+        df["sym_text"] = extract_sym(df.selftext)
+
+        df["stocks"] = df["sym_title"] + df["sym_text"]
+
+        stocks_counter = get_stocks_with_count(df["stocks"])
+
         data_wrangling(stocks_counter)
+
         time.sleep(300)
