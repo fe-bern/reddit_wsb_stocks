@@ -81,13 +81,13 @@ def get_stocks_with_count(series):
     j = 0
 
     counter_list = []
-    dict_list = []
+    dict_counter = []
     for i in series:
         counter_list.append(Counter(series.loc[j]).items())
         for i in counter_list:
-            dict_list.append(dict(counter_list[j]))
+            dict_counter.append(dict(counter_list[j]))
         j += 1
-    return d
+    return dict_counter
 
 
 # this json is from stocks_with_symbol.py
